@@ -31,7 +31,7 @@ app.use(function (req, res, next) {
 
 // port to listen
 const port = 4000;
-app.listen(port, (err) => {
+app.listen(process.env.PORT || port, (err) => {
     if (err) console.log(err);
     else console.log('Listening to port: ' + port);
 });
