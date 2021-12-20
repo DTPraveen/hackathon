@@ -1,13 +1,32 @@
 var express = require('express');
-var bodyparser = require('body-parser');
+var bodyParser = require('body-parser');
 var cors = require('cors');
+var mysql = require('mysql');
 
 var routeUser = require('./api/index');
+
+var mysqlConnection = mysql.createConnection({
+    host: 'localhost',
+    user: 'twitter_db_username',
+    password: 'PAss11@!word',
+    database: 'twitter_db',
+    multipleStatements: true
+});
+
+mysqlConnection.connect((err) => {
+    if (!err)
+        console.log('Connection Established Successfully');
+    else
+        console.log('Connection Failed!' + JSON.stringify(err, undefined, 2));
+});
+global.db = mysqlConnection;
+
 
 var app = express();
 
 // middlewares
-app.use(bodyparser.json({useNewUrlParser: true}));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(cors());
 
 //getting routes
@@ -31,7 +50,7 @@ app.use(function (req, res, next) {
 
 // port to listen
 const port = 4000;
-app.listen(port, (err) => {
+app.listen(process.env.PORT || port, (err) => {
     if (err) console.log(err);
     else console.log('Listening to port: ' + port);
 });
